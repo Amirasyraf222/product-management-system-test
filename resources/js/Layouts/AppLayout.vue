@@ -1,45 +1,86 @@
 <script setup>
 import { Link, usePage } from '@inertiajs/vue3';
+import { ref } from 'vue';
 
 const page = usePage();
+const sidebarOpen = ref(false);
+
+const isActive = (path) => {
+  return page.url.startsWith(path);
+};
+
+const toggleSidebar = () => {
+  sidebarOpen.value = !sidebarOpen.value;
+};
+
+const closeSidebar = () => {
+  sidebarOpen.value = false;
+};
 </script>
 
 <template>
-  <div class="min-h-screen bg-slate-50">
-    <header class="border-b border-slate-200 bg-white">
-      <div class="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-        <div>
-          <h1 class="text-xl font-bold text-slate-900">Product Management System</h1>
-        </div>
-        <nav class="flex items-center gap-3">
-          <Link
-            href="/products"
-            class="rounded-lg px-4 py-2 text-sm font-medium transition"
-            :class="$page.component === 'Products/Index' ? 'bg-slate-900 text-white' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'"
-          >
-            Products
-          </Link>
-          <Link
-            href="/products/create"
-            class="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-indigo-700"
-          >
-            Add Product
-          </Link>
-           <Link href="/preview" class="rounded-xl bg-emerald-600 px-4 py-2 text-sm text-white hover:bg-emerald-700">
-          Preview Carousell
-        </Link>
-        </nav>
+  <div class="min-h-screen bg-slate-100">
+    <header class="border-b border-slate-200 bg-white px-6 py-4 shadow-sm">
+      <div class="flex items-center gap-3">
+        <button
+          type="button"
+          @click="toggleSidebar"
+          class="inline-flex items-center justify-center rounded-lg bg-slate-100 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-200"
+        >
+          ☰ Menu
+        </button>
+
+        <h1 class="text-xl font-bold text-slate-900">
+          Product Management System
+        </h1>
       </div>
     </header>
 
-    <main class="mx-auto max-w-6xl px-6 py-8">
-      <div
-        v-if="page.props.flash?.success"
-        class="mb-6 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700"
-      >
-        {{ page.props.flash.success }}
+    <div
+      v-if="sidebarOpen"
+      @click="closeSidebar"
+      class="fixed inset-0 z-40 bg-black/30"
+    ></div>
+
+    <aside
+      class="fixed left-0 top-0 z-50 h-full w-72 transform border-r border-slate-200 bg-white shadow-xl transition-transform duration-300"
+      :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'"
+    >
+      <div class="flex items-center justify-between border-b border-slate-200 px-5 py-4">
+        <div>
+          <h2 class="text-lg font-bold text-slate-900">Management</h2>
+        </div>
+
+        <button
+          type="button"
+          @click="closeSidebar"
+          class="rounded-lg bg-slate-100 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-200"
+        >
+          ✕
+        </button>
       </div>
 
+      <nav class="space-y-2 p-4">
+        <Link
+          href="/categories"
+          @click="closeSidebar"
+          class="block rounded-xl px-4 py-3 text-sm font-medium transition"
+          :class="isActive('/categories') ? 'bg-indigo-600 text-white' : 'text-slate-700 hover:bg-slate-100'"
+        >
+          Manage Categories
+        </Link>
+           <Link
+          href="/products"
+          @click="closeSidebar"
+          class="block rounded-xl px-4 py-3 text-sm font-medium transition"
+          :class="isActive('/products') ? 'bg-indigo-600 text-white' : 'text-slate-700 hover:bg-slate-100'"
+        >
+          Manage Products
+        </Link>
+      </nav>
+    </aside>
+
+    <main class="p-8">
       <slot />
     </main>
   </div>

@@ -12,14 +12,19 @@ const form = useForm({
   quantity: 1,
   category_id: '',
   image: null,
+  images: [],
 });
+
+const handleCoverImageChange = (event) => {
+  form.image = event.target.files[0];
+};
+
+const handleGalleryImagesChange = (event) => {
+  form.images = Array.from(event.target.files);
+};
 
 const submit = () => {
   form.post('/products');
-};
-
-const handleImageChange = (event) => {
-  form.image = event.target.files[0];
 };
 </script>
 
@@ -39,7 +44,7 @@ const handleImageChange = (event) => {
         </div>
 
         <div>
-          <label class="mb-2 block text-sm font-medium text-slate-700">Price (RM)</label>
+          <label class="mb-2 block text-sm font-medium text-slate-700">Price</label>
           <input v-model="form.price" type="number" step="0.01" min="0" class="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm" />
           <p v-if="form.errors.price" class="mt-1 text-sm text-red-500">{{ form.errors.price }}</p>
         </div>
@@ -62,9 +67,15 @@ const handleImageChange = (event) => {
         </div>
 
         <div>
-          <label class="mb-2 block text-sm font-medium text-slate-700">Product Image</label>
-          <input type="file" accept="image/*" @change="handleImageChange" class="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm" />
+          <label class="mb-2 block text-sm font-medium text-slate-700">Cover Image</label>
+          <input type="file" accept="image/*" @change="handleCoverImageChange" class="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm" />
           <p v-if="form.errors.image" class="mt-1 text-sm text-red-500">{{ form.errors.image }}</p>
+        </div>
+
+        <div>
+          <label class="mb-2 block text-sm font-medium text-slate-700">Gallery Images</label>
+          <input type="file" multiple accept="image/*" @change="handleGalleryImagesChange" class="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm" />
+          <p v-if="form.errors['images.0']" class="mt-1 text-sm text-red-500">{{ form.errors['images.0'] }}</p>
         </div>
 
         <button type="submit" class="rounded-xl bg-indigo-600 px-5 py-3 text-sm font-medium text-white hover:bg-indigo-700" :disabled="form.processing">
