@@ -10,7 +10,6 @@ const page = usePage();
       <div class="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
         <div>
           <h1 class="text-xl font-bold text-slate-900">Product Management System</h1>
-          <p class="text-sm text-slate-500">Laravel + Vue 3 + Inertia + Tailwind</p>
         </div>
         <nav class="flex items-center gap-3">
           <Link
@@ -26,6 +25,9 @@ const page = usePage();
           >
             Add Product
           </Link>
+           <Link href="/preview" class="rounded-xl bg-emerald-600 px-4 py-2 text-sm text-white hover:bg-emerald-700">
+          Preview Carousell
+        </Link>
         </nav>
       </div>
     </header>
