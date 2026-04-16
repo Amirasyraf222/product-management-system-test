@@ -51,20 +51,26 @@ class CategoryController extends Controller
         return redirect()->route('categories.index')->with('success', 'Category updated successfully.');
     }
 
-    public function destroy(Category $category)
+    public function destroy($id)
     {
-        if ($category->products()->count() > 0) {
+        $category = Category::find($id);
+
+        if (!$category) {
             return response()->json([
-                'success' => false,
-                'message' => 'Cannot delete category because it is used by products.',
+                'message' => 'Category not found or already deleted.'
+            ], 404);
+        }
+
+        if ($category->products()->withTrashed()->count() > 0) {
+            return response()->json([
+                'message' => 'Cannot delete category because it is still linked to existing or archived products.'
             ], 422);
         }
 
         $category->delete();
 
         return response()->json([
-            'success' => true,
-            'message' => 'Category deleted successfully.',
+            'message' => 'Category deleted successfully.'
         ]);
     }
 }

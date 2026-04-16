@@ -9,6 +9,10 @@ defineProps({
 
 
 const deleteCategory = async (id) => {
+  const url = `${window.location.origin}/categories/${id}`;
+  console.log('Deleting category id:', id);
+  console.log('DELETE URL:', url);
+
   const result = await Swal.fire({
     title: 'Delete Category?',
     text: 'This action cannot be undone.',
@@ -23,7 +27,7 @@ const deleteCategory = async (id) => {
   if (!result.isConfirmed) return;
 
   try {
-    const response = await fetch(`/categories/${id}`, {
+    const response = await fetch(url, {
       method: 'DELETE',
       headers: {
         'X-Requested-With': 'XMLHttpRequest',
@@ -51,6 +55,8 @@ const deleteCategory = async (id) => {
 
     window.location.reload();
   } catch (error) {
+    console.error(error);
+
     await Swal.fire({
       icon: 'error',
       title: 'Error',
@@ -114,13 +120,14 @@ const deleteCategory = async (id) => {
                     <i class="fa-solid fa-pen-to-square"></i>
                   </Link>
 
-                  <button
-                    @click="deleteCategory(category.id)"
-                    class="inline-flex cursor-pointer items-center justify-center rounded-lg bg-red-100 p-2 text-red-600 hover:bg-red-200"
-                    title="Delete"
-                  >
-                    <i class="fa-solid fa-trash"></i>
-                  </button>
+               <button
+                type="button"
+                @click.stop.prevent="deleteCategory(category.id)"
+                class="inline-flex cursor-pointer items-center justify-center rounded-lg bg-red-100 p-2 text-red-600 hover:bg-red-200"
+                title="Delete"
+                >
+                <i class="fa-solid fa-trash"></i>
+                </button>
                 </div>
               </td>
             </tr>
