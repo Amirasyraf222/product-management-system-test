@@ -24,13 +24,18 @@ class ProductController extends Controller
 
         $sortBy = $request->input('sort_by', 'name');
         $perPage = (int) $request->input('per_page', 10);
+        $direction = $request->input('direction', 'asc');
+
 
         if (!in_array($perPage, [5, 10, 15, 20])) {
             $perPage = 10;
         }
+        if (!in_array($direction, ['asc', 'desc'])) {
+            $direction = 'asc';
+        }
 
         if (in_array($sortBy, ['name', 'quantity', 'price'])) {
-            $query->orderBy($sortBy);
+            $query->orderBy($sortBy, $direction);
         }
 
         $products = $query->paginate($perPage)->withQueryString();
@@ -56,6 +61,8 @@ class ProductController extends Controller
                 'category_id' => $request->input('category_id', ''),
                 'sort_by' => $sortBy,
                 'per_page' => $perPage,
+                'direction' => $direction,
+
             ],
         ]);
     }

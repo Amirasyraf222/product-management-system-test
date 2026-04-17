@@ -79,6 +79,28 @@ const resetFilters = () => {
   });
 };
 
+const toggleSort = (field) => {
+  const direction =
+    props.filters.sort_by === field && props.filters.direction === 'asc'
+      ? 'desc'
+      : 'asc';
+
+  router.get(
+    '/products',
+    {
+      category_id: props.filters.category_id,
+      sort_by: field,
+      direction,
+      per_page: props.filters.per_page ?? 5,
+    },
+    {
+      preserveState: true,
+      preserveScroll: true,
+      replace: true,
+    }
+  );
+};
+
 const deleteProduct = (id) => {
   Swal.fire({
     title: 'Delete Product?',
@@ -107,27 +129,6 @@ const deleteProduct = (id) => {
   });
 };
 
-const toggleSort = (field) => {
-  const direction =
-    props.filters.sort_by === field && props.filters.direction === 'asc'
-      ? 'desc'
-      : 'asc';
-
-  router.get(
-    '/products',
-    {
-      category_id: props.filters.category_id,
-      sort_by: field,
-      direction,
-      per_page: props.filters.per_page ?? 5,
-    },
-    {
-      preserveState: true,
-      preserveScroll: true,
-      replace: true,
-    }
-  );
-};
 
 const goToPage = (url) => {
   if (!url) return;
@@ -202,7 +203,20 @@ const goToPage = (url) => {
             <option value="price">Price</option>
           </select>
         </div>
-        
+        <div>
+          <label class="mb-2 block text-sm font-medium text-slate-700">
+            Direction
+          </label>
+          <select
+            name="direction"
+            :value="filters.direction ?? 'asc'"
+            @change="applyFilters"
+            class="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm"
+          >
+            <option value="asc">Ascending</option>
+            <option value="desc">Descending</option>
+          </select>
+        </div>
         <div>
           <label class="mb-2 block text-sm font-medium text-slate-700">
             Show Per Page
