@@ -5,6 +5,7 @@
 - Run `npm install` 
 - Rename `.env.example` to `.env`
 - Run `New-Item database/database.sqlite -ItemType File` to create new sqlite file
+- After sqlite file is created, please change the `DB_DATABASE path in env` to your local sqlite path
 - Run `php artisan migrate --seed` to migrate database and seed data
 - Run `php artisan storage:link` to link to storage app
 - Run `php artisan key:generate` to generate key if required (if needed)
